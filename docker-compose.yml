@@ -40,6 +40,9 @@ services:
       - TOKEN=CHANGE_THIS
       # - judger_debug=1
 
+    ports:
+      - "0.0.0.0:8080:8080"
+
   oj-backend:
     image: registry.cn-hongkong.aliyuncs.com/oj-image/backend:1.6.1
     restart: always
