@@ -3,12 +3,14 @@ services:
 
   oj-redis:
     image: redis:4.0-alpine
+    user: ${CURRENT_UID}  # 使用环境变量
     restart: always
     volumes:
       - ./data/redis:/data
 
   oj-postgres:
     image: postgres:10-alpine
+    user: ${CURRENT_UID}  # 使用环境变量
     restart: always
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
@@ -19,6 +21,7 @@ services:
 
   oj-judge:
     image: registry.cn-hongkong.aliyuncs.com/oj-image/judge:1.6.1
+    user: ${CURRENT_UID}  # 使用环境变量
     restart: always
     read_only: true
     cap_drop:
@@ -31,7 +34,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ./data/backend/test_case:/test_case:ro
+      - /home/ljd/data/backend/test_case:/test_case:ro
       - ./data/judge_server/log:/log
       - ./data/judge_server/run:/judger
     environment:
@@ -45,13 +48,14 @@ services:
 
   oj-backend:
     image: registry.cn-hongkong.aliyuncs.com/oj-image/backend:1.6.1
+    user: ${CURRENT_UID}  # 使用环境变量
     restart: always
     depends_on:
       - oj-redis
       - oj-postgres
       - oj-judge
     volumes:
-      - ./data/backend:/data
+      - /home/ljd/data/backend/:/data
     environment:
       - POSTGRES_DB=onlinejudge
       - POSTGRES_USER=onlinejudge
